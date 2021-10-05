@@ -24,24 +24,27 @@ func main() {
 	}
 
 	defer f.Close()
-
-	reader := bufio.NewReader(f)
+	defer conn.Close()
 
 	buf := make([]byte, 16)
 
 	for {
-		_, err := reader.Read(buf)
+		n, err := f.Read(buf)
 
 		if err != nil {
-			if err != io.EOF {
+			if err == io.EOF {
+				fmt.Println("EOF")
+				break
+			} else {
 				log.Fatal("error while reading")
 			}
-			break
 		}
-		//conn.Write(buf)
-		fmt.Fprint(conn, buf)
+
+		fmt.Print(buf)
+		fmt.Println(string(buf[0:n]))
+		conn.Write(buf)
 		message, _ := bufio.NewReader(conn).ReadString('\n')
-		fmt.Printf("Message Receied %s\n", string(message))
+		//fmt.Printf("Message Receied %s\n", string(message))
 		if message == "end\n" {
 			break
 		}
