@@ -9,7 +9,6 @@ import (
 	"os"
 )
 
-//commit2
 func main() {
 	fmt.Println("Start server...")
 
